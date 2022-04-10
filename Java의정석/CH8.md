@@ -155,25 +155,41 @@ try (FileInputStream fis = new FileInputStream("test.txt");) {
 
 ## ▶️ 연결된 예외(chained exception)
 한 예외가 다른 예외를 발생시키도록 원인 예외로 등록해서 다시 예외를 발생시킬 수 있다.
-- 이유1. 여러가지 예외를 하나의 큰 분류의 예외로 묶어서 다루기 위함
+### 이유1. 여러가지 예외를 하나의 큰 분류의 예외로 묶어서 다루기 위함
   ```java
   Throwable initCause(Throwable cause)  //지정한 예외를 원인 예외로 등록
   Throwable getCause()  //원인 예외를 반환
   ```
+
+*기존 - 원인 예외를 등록하지 않고, 상위 Exception으로 처리하는 경우
+
   ```java
   //발생 가능한 예외가 SpaceException, MemoryException 2가지 일 때
-  //원인 예외를 등록하지 않고, 상위 Exception으로 처리하는 경우
+  //InstallException은 SpaceException, MemoryException의 조상 클래스여야 함 (상속관계 필수)
   try { 
     startInstall(); //SpaceException 발생
   } catch (InstallException e) {
     e.printStackTrace();
   }
   ```
-  - 위의 2가지 예외 중 실제로 발생한 예외가 무엇인지 알 수 없고, 상속관계를 변경해야 한다.
-  - 원인 예외를 포함시키게 하면, 두 예외는 상속관계가 아니어도 상관없게 된다.
+  - 위의 2가지 예외 중 실제로 발생한 예외가 무엇인지 알 수 없고, 상속관계로 설정해야 한다.
+
+*개선 - 원인 예외로 등록
+```java
+try {
+  startInstall(); //SpaceException 발생
+} catch (SpaceException e) {
+  InstallException ie = new InstallException("설치중 예외 발생");  //예외생성
+  ie.initCause(e);  //원인예외 지정
+  throw ie;      
+} catch (MemoryException me) {
+  ...  
+}
+```
+- 원인 예외를 포함시키게 하면, 두 예외는 상속관계가 아니어도 상관없게 된다.
   
 
-- 이유2. checked예외를 unchecked예외로 바꿀 수 있도록 하기 위함
+### 이유2. checked예외를 unchecked예외로 바꿀 수 있도록 하기 위함
   - unchecked예외로 바꾸면 예외처리를 선택적으로 할 수 있다.
   ```java
   static void startInstall throws SpaceException { 
