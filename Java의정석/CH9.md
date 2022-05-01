@@ -52,11 +52,18 @@ class Point implements Cloneable {
 
 ## ▶️ String 클래스
 ### #️⃣ StringBuffer클래스와 StringBuilder 클래스
-- String클래스는 인스턴스 생성 시 지정된 문자열을 변경할 없지만, StringBuffer클래스는 가능하다.
+- String클래스는 인스턴스 생성 시 지정된 문자열을 변경할 없지만(불변객체), StringBuffer클래스는 가능하다.
 - 내부적으로 문자열 편집을 위한 buffer를 가지고 있으며, StringBuffer인스턴스를 생성할 때 그 크기를 지정할 수 있다.
 - StringBuffer는 멀티쓰레드에 안전(thread safe)하도록 동기화되어 있다.
+    - 동기화 키워드(synchronized)를 지원한다.
     - 멀티쓰레드로 작성된 프로그램이 아닌 경우, StringBuffer의 동기화는 불필요하게 성능을 떨어뜨린다.
 
 - StringBuffer에서 쓰레드의 동기화만 뺀 것이 StringBuilder이다.
+    - 동기화를 지원하지 않지만 단일쓰레드 환경에서 성능이 StringBuffer보다 좋다.
     - 다만, StringBuffer도 충분히 성능이 좋기 때문에 성능향상이 반드시 필요한 경우를 제외하고는 굳이 변경할 필요는 없다.
-
+  
+### 추가
+- '멀티쓰레드에 안전하다(thread-safe)'의 의미
+  - 멀티쓰레드 프로그래밍에서 일반적으로 어떤 함수나 변수, 혹은 객체가 여러 쓰레드로부터 동시에 접근이 이루어져도 프로그램의 실행에 문제가 없음을 뜻한다.
+  - 하나의 함수가 한 쓰레드로부터 호출되어 실행 중일 때, 다른 쓰레드가 해당 함수를 호출하여 동시에 함께 실행되더라도 각 쓰레드에서의 함수 실행 결과가 올바로 나오는 것으로 정의한다.
+  
